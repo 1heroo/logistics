@@ -105,12 +105,8 @@ class WbPersonalArea(BaseUtils):
         if data:
             for item in data.get('data', {}).get('warehouselist', []):
                 if item.get('warehouseName') == 'Маркетплейс':
-                    return float(item.get('delivery')), float(item.get('deliveryReturn'))
-
+                    return float(item.get('delivery').replace(' ', '')), float(item.get('deliveryReturn', '').replace(' ', ''))
         return 0, 0
-
-
-
 
 
 class ParsingUtils(BaseUtils):
