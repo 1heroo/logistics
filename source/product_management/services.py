@@ -68,6 +68,8 @@ class LogisticServices(ProductServices):
                 box, retail = await self.pa_utils.get_retail_commission(headers=headers, product=product)
                 product.logistic_box = box
                 product.retail_price = retail
+
+                return
                 if len(products_to_be_saved) == 20:
                     await self.product_queries.save_in_db(instances=products_to_be_saved, many=True)
                     products_to_be_saved = []
