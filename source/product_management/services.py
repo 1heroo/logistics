@@ -69,7 +69,6 @@ class LogisticServices(ProductServices):
                 product.logistic_box = box
                 product.retail_price = retail
 
-                return
                 if len(products_to_be_saved) == 20:
                     await self.product_queries.save_in_db(instances=products_to_be_saved, many=True)
                     products_to_be_saved = []

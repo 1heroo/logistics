@@ -93,7 +93,6 @@ class WbPersonalArea(BaseUtils):
         }
 
     async def get_retail_commission(self, headers: dict, product: Product):
-        print(headers)
         url = 'https://seller-weekly-report.wildberries.ru/ns/categories-info/suppliers-portal-analytics/api/v1/tariffs'
         payload = {
             'height': product.height_cm,
