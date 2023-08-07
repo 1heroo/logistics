@@ -103,7 +103,11 @@ class WbPersonalArea(BaseUtils):
         }
         data = await self.make_post_request(headers=headers, payload=payload, url=url)
         if data:
-            for item in data.get('data', {}).get('warehouselist', []):
+            warehouses = data.get('data', {}).get('warehouselist', [])
+            if warehouses is None:
+                return 0, 0
+
+            for item in warehouses:
                 if item.get('warehouseName') == 'Маркетплейс':
                     return float(item.get('delivery').replace(' ', '')), float(item.get('deliveryReturn', '').replace(' ', ''))
         return 0, 0
