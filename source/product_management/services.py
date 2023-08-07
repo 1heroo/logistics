@@ -71,6 +71,7 @@ class LogisticServices(ProductServices):
                 products_to_be_saved.append(product)
 
                 if len(products_to_be_saved) == 20:
+                    print('chunk_saving')
                     await self.product_queries.save_in_db(instances=products_to_be_saved, many=True)
                     products_to_be_saved = []
 
