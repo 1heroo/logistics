@@ -97,7 +97,7 @@ class WbPersonalArea(BaseUtils):
         payload = {
             'height': product.height_cm,
             'length': product.length_cm,
-            'weight': product.weight_kg,
+            'weight': 0,
             'width': product.width_cm,
             'subjectId': 336
         }
@@ -111,6 +111,27 @@ class WbPersonalArea(BaseUtils):
                 if item.get('warehouseName') == 'Маркетплейс':
                     return float(item.get('delivery').replace(' ', '')), float(item.get('deliveryReturn', '').replace(' ', ''))
         return 0, 0
+
+    async def get_retail_commission_by_my_data(self, headers: dict, height, length, width):
+        url = 'https://seller-weekly-report.wildberries.ru/ns/categories-info/suppliers-portal-analytics/api/v1/tariffs'
+        payload = {
+            'height': height,
+            'length': length,
+            'weight': 0,
+            'width': width,
+            'subjectId': 336
+        }
+        data = await self.make_post_request(headers=headers, payload=payload, url=url)
+        if data:
+            warehouses = data.get('data', {}).get('warehouselist', [])
+            if warehouses is None:
+                return 0
+
+            for item in warehouses:
+                if item.get('warehouseName') == 'Маркетплейс':
+                    return float(item.get('delivery').replace(' ', ''))
+        return 0
+
 
 
 class ParsingUtils(BaseUtils):

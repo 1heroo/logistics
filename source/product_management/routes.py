@@ -41,3 +41,19 @@ async def import_category_commission(file: bytes = File()):
 async def import_rest_commission_columns():
     await logistic_services.import_rest_commission_columns()
     return Response(status_code=status.HTTP_200_OK)
+
+
+
+@router.post('/define-logistic-box-commission/')
+async def define_logistic_box_commission(file: bytes = File()):
+    df = pd.read_excel(file)
+
+    width_column = 'Ширина упаковки'
+    length_column = 'Длина упаковки'
+    height_column = 'Высота упаковки'
+    commission_column = 'ЦЕНА ЛОГИСТИКИ ВБ'
+
+    sequence = await logistic_services.get_box_commission(
+        df=df, width=width_column, length=length_column, height=height_column, commission_column=commission_column)
+
+    return logistic_services.xlsx_utils.streaming_response(sequence=sequence, file_name='box_commission')

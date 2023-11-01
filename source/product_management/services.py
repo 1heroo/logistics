@@ -2,6 +2,7 @@ import aiohttp
 import pandas as pd
 
 from source.core.settings import settings
+from source.core.xlsx_utils import XlsxUtils
 from source.product_management.models import Product
 from source.product_management.queries import ShopQueries, ProductQueries
 from source.product_management.utils import ProductUtils, WbApiUtils, ParsingUtils, WbPersonalArea
@@ -14,6 +15,7 @@ class ProductServices:
         self.wb_api_utils = WbApiUtils()
         self.parsing_utils = ParsingUtils()
         self.pa_utils = WbPersonalArea()
+        self.xlsx_utils = XlsxUtils()
 
         self.shop_queries = ShopQueries()
         self.product_queries = ProductQueries()
@@ -76,3 +78,20 @@ class LogisticServices(ProductServices):
                     products_to_be_saved = []
 
             await self.product_queries.save_in_db(instances=products_to_be_saved, many=True)
+
+    async def get_box_commission(self, df: pd.DataFrame, width, length, height, commission_column) -> list[dict]:
+        output_data = []
+        cookie = self.pa_utils.standard_cookie.format(wb_token=settings.WB_TOKEN, supplier_external='b4c30a97-e483-5a84-86b6-381fe172e298')
+        headers = self.pa_utils.get_headers(x_user_id=settings.USER_X_ID, cookie=cookie)
+
+        for index in df.index:
+            print(index)
+            width_value = int(df[width][index])
+            length_value = int(df[length][index])
+            height_value = int(df[height][index])
+
+            box = await self.pa_utils.get_retail_commission_by_my_data(
+                headers=headers, width=width_value, length=length_value, height=height_value)
+            df.loc[index, commission_column] = box
+
+        return df.to_dict('records')
