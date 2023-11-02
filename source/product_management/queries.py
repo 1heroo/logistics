@@ -54,7 +54,7 @@ class ProductQueries(BaseQueries):
             {'nm_id': product.nm_id, 'new_product': product}
             for product in products
         ])
-        df = pd.merge(saved_products_df, new_products_df, how='outer', on='nm_id')
+        df = pd.merge(saved_products_df, new_products_df, how='inner', on='nm_id')
 
         products_to_be_saved = []
         for index in df.index:
