@@ -28,6 +28,8 @@ class Product(Base):
 
     id = sa.Column(sa.Integer, primary_key=True)
     nm_id = sa.Column(sa.Integer)
+    vendor_code = sa.Column(sa.String)
+    brand = sa.Column(sa.String)
 
     subj_name = sa.Column(sa.String)
     subj_root_name = sa.Column(sa.String)
@@ -36,7 +38,6 @@ class Product(Base):
     length_cm = sa.Column(sa.Float)
     height_cm = sa.Column(sa.Float)
     weight_kg = sa.Column(sa.Float)
-
     rv_ten_percents = sa.Column(sa.Float)
     logistic_box = sa.Column(sa.Float)
     retail_price = sa.Column(sa.Float)
@@ -49,3 +50,16 @@ class Product(Base):
 
     def __repr__(self):
         return str(self.nm_id)
+
+    def to_external_dict(self):
+        return {
+            'Артикул продавца': self.vendor_code,
+            'Номенклатура': self.nm_id,
+            'Предмет': self.subj_name,
+            'Бренд': self.brand,
+            'Ширина упаковки': self.width_cm,
+            'Длина упаковки': self.length_cm,
+            'Высота упаковки': self.height_cm,
+            'ЦЕНА ЛОГИСТИКИ ВБ': self.logistic_box,
+            'retail_price': self.retail_price
+        }

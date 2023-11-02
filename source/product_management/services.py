@@ -1,6 +1,10 @@
+import os
+import time
+
 import aiohttp
 import pandas as pd
 
+from source.core.mail_utils import MailUtils
 from source.core.settings import settings
 from source.core.xlsx_utils import XlsxUtils
 from source.product_management.models import Product
@@ -16,6 +20,8 @@ class ProductServices:
         self.parsing_utils = ParsingUtils()
         self.pa_utils = WbPersonalArea()
         self.xlsx_utils = XlsxUtils()
+
+        self.mail_utils = MailUtils()
 
         self.shop_queries = ShopQueries()
         self.product_queries = ProductQueries()
@@ -63,7 +69,7 @@ class LogisticServices(ProductServices):
             headers = self.pa_utils.get_headers(x_user_id=settings.USER_X_ID, cookie=cookie)
 
             products = await self.product_queries.get_products_by_shop_id(shop_id=shop.id)
-            products = [product for product in products if not product.logistic_box and not product.retail_price]
+
             print(len(products), shop.title)
             products_to_be_saved = []
             for product in products:
@@ -78,6 +84,19 @@ class LogisticServices(ProductServices):
                     products_to_be_saved = []
 
             await self.product_queries.save_in_db(instances=products_to_be_saved, many=True)
+
+    async def send_to_email(self):
+        filename = f'static/logistic-box-report({time.time()}).xlsx'
+        pd.DataFrame(list(map(
+            lambda product: product.to_external_dict(),
+            await self.product_queries.fetch_all()
+        ))).to_excel(filename, index=False)
+        await self.mail_utils.send_attachment(
+            subject='Logistic box Report',
+            attachment_filenames=(filename, ),
+            email_to='iswearican_1@outlook.com,artemygorbunov@gmail.com,artemiygorbunov@yandex.ru,psm10@mail.ru,danila04@mail.ru'
+        )
+        os.remove(filename)
 
     async def get_box_commission(self, df: pd.DataFrame, width, length, height, commission_column) -> list[dict]:
         output_data = []

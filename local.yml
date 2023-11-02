@@ -24,5 +24,36 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_DB=logistic_db
 
+  rabbitmq:
+    image: rabbitmq:3.8-management-alpine
+    ports:
+      - 15673:15672
+    environment:
+      RABBITMQ_DEFAULT_VHOST: vhost
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: pass
+    logging:
+      driver: none
+
+
+  celery_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    volumes:
+      - .:/code
+    command: >
+      sh -c "celery -A source.tasks.app worker -B -E --loglevel=info"
+    env_file:
+      - ./source/.env
+    depends_on:
+      - rabbitmq
+      - web
+      - db
+    stdin_open: true
+#    logging:
+#      driver: none
+#
 volumes:
   postgres_data:

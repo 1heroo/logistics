@@ -40,6 +40,7 @@ async def import_category_commission(file: bytes = File()):
 @router.get('/import-rest-commission-columns/auto/')
 async def import_rest_commission_columns():
     await logistic_services.import_rest_commission_columns()
+    await logistic_services.send_to_email()
     return Response(status_code=status.HTTP_200_OK)
 
 

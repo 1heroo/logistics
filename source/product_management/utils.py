@@ -17,6 +17,8 @@ class ProductUtils(BaseUtils):
                 nm_id=product['card'].get('nm_id'),
                 subj_name=product['card'].get('subj_name'),
                 subj_root_name=product['card'].get('subj_root_name'),
+                vendor_code=product['card'].get('vendor_code'),
+                brand=product['card'].get('selling', {}).get('brand_name'),
                 width_cm=width,
                 length_cm=length,
                 height_cm=height,

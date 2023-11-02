@@ -68,6 +68,9 @@ class ProductQueries(BaseQueries):
             if pd.isna(saved_product) and pd.isna(new_product):
                 continue
 
+            saved_product.vendor_code = new_product.vendor_code
+            saved_product.brand = new_product.brand
+
             saved_product.width_cm = new_product.width_cm
             saved_product.length_cm = new_product.length_cm
             saved_product.height_cm = new_product.height_cm
