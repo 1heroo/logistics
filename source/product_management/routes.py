@@ -77,7 +77,7 @@ async def change_shops_activity(shop_id: int, shop_status: bool):
 
 
 @router.get('/change-shops-api-key/')
-async def change_shops_api_key(shop_id: int, api_key: bool):
+async def change_shops_api_key(shop_id: int, api_key: str):
     shop = await logistic_services.shop_queries.get_shop_by_shop_id(shop_id=shop_id)
     if shop is None:
         return 'shop is None'

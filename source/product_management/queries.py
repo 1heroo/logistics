@@ -27,7 +27,7 @@ class ShopQueries(BaseQueries):
                 sa.select(self.model)
                 .where(self.model.id == shop_id)
             )
-            return result.scalars().all()
+            return result.scalars().first()
 
 
 class ProductQueries(BaseQueries):
