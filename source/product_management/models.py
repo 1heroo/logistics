@@ -43,7 +43,7 @@ class Product(Base):
     retail_price = sa.Column(sa.Float)
 
     shop_id = sa.Column(sa.Integer, sa.ForeignKey('shops.id'))
-    shop = relationship('Shop', back_populates='products')
+    shop = relationship('Shop', back_populates='products', lazy='subquery')
 
     def __str__(self):
         return str(self.nm_id)
@@ -61,5 +61,6 @@ class Product(Base):
             'Длина упаковки': self.length_cm,
             'Высота упаковки': self.height_cm,
             'ЦЕНА ЛОГИСТИКИ ВБ': self.logistic_box,
-            'retail_price': self.retail_price
+            'retail_price': self.retail_price,
+            'Магазин': self.shop.title
         }

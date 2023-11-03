@@ -21,6 +21,14 @@ class ShopQueries(BaseQueries):
                 )
             return result.scalars().all()
 
+    async def get_shop_by_shop_id(self, shop_id: int) -> Shop:
+        async with async_session() as session:
+            result = await session.execute(
+                sa.select(self.model)
+                .where(self.model.id == shop_id)
+            )
+            return result.scalars().all()
+
 
 class ProductQueries(BaseQueries):
     model = Product

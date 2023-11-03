@@ -44,6 +44,11 @@ async def import_rest_commission_columns():
     return Response(status_code=status.HTTP_200_OK)
 
 
+@router.get('/send-email-message/')
+async def send_email_message():
+    await logistic_services.send_to_email()
+    return Response(status_code=status.HTTP_200_OK)
+
 
 @router.post('/define-logistic-box-commission/')
 async def define_logistic_box_commission(file: bytes = File()):
@@ -58,3 +63,25 @@ async def define_logistic_box_commission(file: bytes = File()):
         df=df, width=width_column, length=length_column, height=height_column, commission_column=commission_column)
 
     return logistic_services.xlsx_utils.streaming_response(sequence=sequence, file_name='box_commission')
+
+
+@router.get('/change-shops-activity/')
+async def change_shops_activity(shop_id: int, shop_status: bool):
+    shop = await logistic_services.shop_queries.get_shop_by_shop_id(shop_id=shop_id)
+    if shop is None:
+        return 'shop is None'
+
+    shop.is_active = shop_status
+    await logistic_services.shop_queries.save_in_db(instances=shop)
+    return Response(status_code=status.HTTP_200_OK)
+
+
+@router.get('/change-shops-api-key/')
+async def change_shops_api_key(shop_id: int, api_key: bool):
+    shop = await logistic_services.shop_queries.get_shop_by_shop_id(shop_id=shop_id)
+    if shop is None:
+        return 'shop is None'
+
+    shop.standard_api_key = api_key
+    await logistic_services.shop_queries.save_in_db(instances=shop)
+    return Response(status_code=status.HTTP_200_OK)
