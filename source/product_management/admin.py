@@ -8,5 +8,5 @@ class ShopAdmin(ModelView, model=Shop):
 
 
 class ProductAdmin(ModelView, model=Product):
-    column_list = ['nm_id', 'subj_name', 'subj_root_name', 'width_cm', 'length_cm', 'height_cm', 'weight_kg', 'rv_ten_percents', 'logistic_box', 'retail_price', 'shop']
+    column_list = ['nm_id', 'subj_name', 'vendor_code', 'brand', 'subj_root_name', 'width_cm', 'length_cm', 'height_cm', 'weight_kg', 'rv_ten_percents', 'logistic_box', 'retail_price', 'shop']
     column_searchable_list = ['nm_id']
