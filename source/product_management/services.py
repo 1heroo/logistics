@@ -94,7 +94,7 @@ class LogisticServices(ProductServices):
         await self.mail_utils.send_attachment(
             subject='Logistic box Report',
             attachment_filenames=(filename, ),
-            email_to='iswearican_1@outlook.com,artemygorbunov@gmail.com,artemiygorbunov@yandex.ru,psm10@mail.ru,danila04@mail.ru'
+            email_to='psm10@mail.ru,danila04@mail.ru'
         )
         os.remove(filename)
 
